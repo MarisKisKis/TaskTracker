@@ -4,38 +4,25 @@ import java.util.Objects;
 public class Task {
     private String taskName;
     private String taskDescription;
+    private int taskId;
+    private Status taskStatus;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return getTaskId() == task.getTaskId() && getTaskName().equals(task.getTaskName()) && getTaskDescription().equals(task.getTaskDescription()) && getTaskStatus().equals(task.getTaskStatus()) && getTasks().equals(task.getTasks());
+        return true;
+        //return getTaskId() == task.getTaskId() && getTaskName().equals(task.getTaskName()) && getTaskDescription().equals(task.getTaskDescription()) && getTaskStatus().equals(task.getTaskStatus()) && getTasks().equals(task.getTasks());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTaskName(), getTaskDescription(), getTaskId(), getTaskStatus(), getTasks());
+        return Objects.hash(getTaskName(), getTaskDescription(), getTaskId(), getTaskStatus());
     }
 
-    private int taskId;
-    private String taskStatus;
 
-    public Task(ArrayList<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public ArrayList<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(ArrayList<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    private ArrayList<Task> tasks = new ArrayList<>();
-
-    public Task(String taskName, String taskDescription, int taskId, String taskStatus) {
+    public Task(String taskName, String taskDescription, int taskId, Status taskStatus) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskId = taskId;
@@ -67,11 +54,11 @@ public class Task {
         this.taskId = taskId;
     }
 
-    public String getTaskStatus() {
+    public Status getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(String taskStatus) {
+    public void setTaskStatus(Status taskStatus) {
         this.taskStatus = taskStatus;
     }
 
@@ -81,7 +68,7 @@ public class Task {
                 "taskName='" + taskName + '\'' +
                 ", taskDescription='" + taskDescription + '\'' +
                 ", taskId=" + taskId +
-                ", taskStatus='" + taskStatus + '\'' +
+                ", taskStatus='" + taskStatus.toString() + '\'' +
                 '}';
     }
 }

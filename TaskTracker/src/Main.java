@@ -24,7 +24,10 @@ public class Main {
                 case "1":
                     System.out.println("Введите задачу");
                     String taskName = scanner.nextLine();
-                    task = taskManager.createTask(task);
+
+                    System.out.println("Введите описание");
+                    String taskDescription = scanner.nextLine();
+                    task = taskManager.createTask(taskName, taskDescription);
                    // String taskName = scanner.nextLine();
 
                     break;
@@ -32,13 +35,21 @@ public class Main {
                 case "2":
                     System.out.println("Введите epic");
                     String epicName = scanner.nextLine();
+                    System.out.println("Введите описание");
+                    String epicDescription = scanner.nextLine();
 
-                    taskManager.createEpic(epic);
+                    taskManager.createEpic(epicName, epicDescription);
                     break;
                 case "3":
                     System.out.println("Введите subtask");
                     String subtaskName = scanner.nextLine();
-                    taskManager.createSubtask(subtask);
+                    System.out.println("Введите описание");
+                    String subtaskDescription = scanner.nextLine();
+                    System.out.println("Введите айди эпика");
+                    int epicId = scanner.nextInt();
+
+                    scanner.nextLine();
+                    taskManager.createSubtask(subtaskName, subtaskDescription, epicId);
                     break;
                 case "4":
                     System.out.println("print all tasks" + taskManager.getAllTasks());
@@ -65,12 +76,14 @@ public class Main {
                     System.out.println("print upradetasks" + taskManager.getTaskById(task));
                     break;
                 case "9":
-                    task = new Task("taskName", "taskDescription", 1, taskManager.taskStatusUpdate());
+                    //task = new Task("taskName", "taskDescription", 1, taskManager.taskStatusUpdate());
                     break;
                 case "10":
                     System.out.println("print all subtasks" + taskManager.getAllSubTasks());
                     break;
-
+                case "11":
+                    System.out.println("print all subtasks" + taskManager.getAllEpics());
+                    break;
                 default:
                     System.out.println("Извините, такой команды пока нет.");
             }
@@ -96,5 +109,7 @@ public class Main {
             System.out.println("7 - удалить все задачи");
             System.out.println("8 - обновить задачу по ИД");
             System.out.println("9 - обновить статус задачи");
+            System.out.println("10 - все задачи");
+            System.out.println("11 - все эпики");
         }
     }

@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class TaskManager {
     // 3*6+1
-    Task task = new Task("taskName", "taskDescription", 1, Status.NEW);
+    //Task task = new Task("taskName", "taskDescription", 1, Status.NEW);
     private HashMap<Integer, Task> taskKeeping = new HashMap<>();
     private HashMap<Integer, Epic> epicSubTasks = new HashMap<>();
     private HashMap<Integer, Subtask> subTaskKeeping = new HashMap<>();
@@ -15,6 +15,14 @@ public class TaskManager {
         return new ArrayList<>(taskKeeping.values());
 
     // return null;
+    }
+
+    public ArrayList<Task> getAllEpics() {
+        System.out.println("get epics lists");
+
+        return new ArrayList<>(epicSubTasks.values());
+
+        // return null;
     }
     public ArrayList<Task> getAllSubTasks() {
         System.out.println("get subTasks lists");
@@ -33,16 +41,15 @@ public class TaskManager {
      //   return null;
     }
     //Создание. Сам объект должен передаваться в качестве параметра
-    public Task createTask(Task task) {
-        task.setTaskId(++generatorId);
+    public Task createTask(String Name, String Description) {
+        int id = ++ generatorId;
+        Task task = new Task(Name,Description,id, Status.NEW);
         taskKeeping.put(task.getTaskId(), task);
         return task;
     }
     // Обновление. Новая версия объекта с верным идентификатором передаются в виде параметра
     public void updateTask (Task task) {
-       if (taskKeeping.containsKey(task.getTaskId())) {
-           return;
-        }
+
        taskKeeping.put(task.getTaskId(), task);
     }
     // Удаление по идентификатору
@@ -54,8 +61,9 @@ public class TaskManager {
         return epicSubTasks.get(taskId);
         //   return null;
     }
-    public Epic createEpic(Epic epic) {
-        epic.setTaskId(++generatorId);
+    public Epic createEpic(String Name, String Description) {
+        int id = ++generatorId;
+        Epic epic = new Epic(Name, Description, id, Status.NEW);
         epicSubTasks.put(epic.getTaskId(), epic);
         return epic;
     }
@@ -68,46 +76,39 @@ public class TaskManager {
     public void deleteEpicById(int taskId) {
         epicSubTasks.remove(taskId);
     }
-    public Subtask getSubtaskById(int epicId) {
-        return subTaskKeeping.get(epicId);
+    public Subtask getSubtaskById(int subtaskId) {
+        return subTaskKeeping.get(subtaskId);
         //   return null;
     }
-    public Subtask createSubtask(Subtask subtask) {
-        subtask.setEpicId(++generatorId);
-        subTaskKeeping.put(subtask.getEpicId(), subtask);
+    public Subtask createSubtask(String Name, String Description, int EpicId) {
+        if (epicSubTasks.containsKey(EpicId)== false)
+        {
+            System.out.println("нет такого эпика");
+            return new Subtask(Name,  "Нет такого эпика",0, Status.NEW, EpicId);
+        }
+        int id = ++generatorId;
+
+        Subtask subtask = new Subtask(Name,Description,id, Status.NEW, EpicId);
+        subTaskKeeping.put(subtask.getTaskId(), subtask);
         return subtask;
     }
     public void subtaskUpdate(Subtask subtask) {
-        if (subTaskKeeping.containsKey(subtask.getEpicId())) {
-            return;
-        }
         subTaskKeeping.put(subtask.getEpicId(), subtask);
     }
-    public void deleteSubtaskById(int epicId) {
-        subTaskKeeping.remove(epicId);
-    }
-    private void epicStatusUpdate(Epic epic) {
-        for (Subtask subtasks : epic.getSubtask()) {
-            if ((subtasks != null) || (epic.getSubtask().contains(epic.getTaskId()))) {
-                String taskStatus = "NEW";
-                System.out.println("NEW");
-            }
-        }
-    }
-    public String taskStatusUpdate() {
-        String taskStatus = "";
-        for (Task task : task.getTasks()) {
-            if ((task != null)||(task.getTasks().contains(task.getTaskId()))) {
-               taskStatus = Status.DONE;
-                System.out.println(taskStatus);
-                    }
-          //  all subtasks new  new
-            //    if all done - done
-                //    сравнивать статусы, если совпадают нью /дан, если не совпадают - ин прогресс
-              //  если нет никаких подзадач - это новое, если статусы подзадач совпадают, то у эпика тот же статус, если статусы где-то не совпадают, то всегда ин прогресс
+    public void deleteSubtaskById(int subtaskId) {
+        Subtask subtask = subTaskKeeping.get(subtaskId);
+        subTaskKeeping.remove(subtaskId);
+        epicSubTasks.get(subtask.getEpicId()).deleteSubTask(subtask);
 
-        }
-        return taskStatus;
+    }
+    private Status epicStatusUpdate(int id, Status status) {
+        Epic epic = epicSubTasks.get(id);
+        epic.setTaskStatus(status);
+        return status;
+    }
+    public Status taskStatusUpdate(int id, Status status) {
+       taskKeeping.get(id).setTaskStatus(status);
+       return status;
     }
 
     //Дополнительные методы: Получение списка всех подзадач определённого эпика.//
